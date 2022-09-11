@@ -18,6 +18,14 @@ const DOM = (() => {
         }
     }
 
+    function isSpaceOccupied(all){
+        let dontAdd = false
+        all.some(elem => {    
+            if(elem.style.borderColor === "red") dontAdd = true
+            })
+            return dontAdd
+    }
+
     function setShipListener(g){
         let box = document.querySelectorAll(".box");
         let button = document.querySelector(".btn");
@@ -54,7 +62,7 @@ const DOM = (() => {
                 }
                 if(!newGame.gameBoard1.isYaxis){
                     for(let i = 0 ; i < currShipLen ; i++){           
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))
+                        all.push(throughBoard(`${yAxis},${xAxis + i}`))
                     }  
                 } 
                 
@@ -91,28 +99,29 @@ const DOM = (() => {
                 let yAxis = parseInt(elem.getAttribute("point")[0], 10);
                 let xAxis = parseInt(elem.getAttribute("point")[2], 10);
                 let all = [];
-                newGame.gameBoard1.shipGridSpot(player.name, currShipLen,yAxis, xAxis, newGame.gameBoard1.isYaxis)
+                if(shipNo > player.playerShips.length - 1){
+                    return
+                }
                 if(newGame.gameBoard1.isYaxis){
                     for(let i = 0 ; i < currShipLen ; i++){    
                         all.push(throughBoard(`${yAxis+i},${xAxis}`))
                     }                   
                 }
-
                 if(!newGame.gameBoard1.isYaxis){
                     for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))                            
-                    }
-                    
+                        all.push(throughBoard(`${yAxis},${xAxis + i}`))                            
+                    }           
                 }
-                console.log(all[0])
-                console.log(all.indexOf(undefined))
-                all.forEach(elem => {
-
-                    console.log(elem.style.backGroundColor = "red")
+                if(all.indexOf(undefined) !== -1 ) return;
+                if(isSpaceOccupied(all)) return
+                all.forEach(elem => {   
+                  newGame.gameBoard1.shipGridSpot(player.name, currShipLen,elem.getAttribute("point")[0], elem.getAttribute("point")[2], newGame.gameBoard1.isYaxis)   
+                    elem.style.borderColor = "red"
                 })
-                //     if(newGame.player1.currShip < newGame.player1.playerShips.length - 1) newGame.player1.currShip++;          
-                //     console.log(newGame.gameBoard1)
-                //     console.log(newGame.gameBoard1.allspot)
+                newGame.player1.currShip++;    
+                    console.log(newGame.gameBoard1)
+                    console.log(newGame.gameBoard1.allspot)
+                 //   if(shipNo)
             })
         })
     } 
@@ -122,17 +131,27 @@ const DOM = (() => {
         newGame.gameBoard2 = gameBoards();    
     }
 
-    function renderGameBoard(){
-        let strtGme = document.querySelector(".start_game");
-        let space = document.querySelector(".grid-box");
-        let width = 10;
-        let height = 10;
-        
+    function renderShipsOnBoard(){
+        let strtGme = document.querySelector(".start_game");  
         let btn = document.createElement("button");
         btn.classList.add("btn");
         btn.innerHTML = newGame.gameBoard1.isYaxis ? "horizontal" : "vertical";
         strtGme.innerHTML = ""      
         strtGme.append(btn)
+         renderBoard()    
+       setShipListener()
+    }
+
+    function renderGamePlay(){
+        document.querySelector
+    }
+
+    function renderBoard(){
+        let width = 10;
+        let height = 10;
+        let games = document.querySelector(".games")
+        let space = document.createElement("div");
+        space.classList.add("grid-box")
         for (let i = 0; i < height ; i ++){
             for(let j = 0; j < width ;j ++){
                let temp = document.createElement("div")
@@ -141,19 +160,33 @@ const DOM = (() => {
                 space.append(temp)
             }
         }
-
-
-        
-       setShipListener()
+        games.append(space)
     }
 
-    function setCompShip(){
-        newGame.player2
+    function setCompShip(shipno) {
+        let t_f =[true, false]
+        let player = newGame.player2;
+        let shipNo = shipno;
+        if(shipNo > player.playerShips.length - 1) return;
+        let currShip = newGame.player2.playerShips[shipNo];
+        let StaticRand = Math.floor(Math.random() * 10 );
+        let useStaticRand = Math.floor(Math.random() * (10 - currShip.shipLength))
+        newGame.gameBoard2.isYaxis = t_f[Math.floor(Math.random()*2)];
+        if(newGame.gameBoard2.isYaxis){
+            for(let i = 0; i < currShip.shipLength; i++){ 
+                newGame.gameBoard2.shipGridSpot(currShip.name, useStaticRand + i, StaticRand)
+            }
+        }
+        if(!newGame.gameBoard2.isYaxis){
+            for(let i = 0; i < currShip.shipLength; i++){ 
+                newGame.gameBoard2.shipGridSpot(currShip.name,  StaticRand, useStaticRand + i)
+            }
+        }
+        shipNo++
+        setCompShip(shipNo)
     }
 
-    function setPlayerShip(num){
-     console.log(newGame.player1.playerShips[1])
-    }
+
 
     function listeners(){
         let btnStrt = document.querySelector(".btn_start")
@@ -162,11 +195,13 @@ const DOM = (() => {
         btnStrt.addEventListener("click", ()=> {
             setPlayers(playerName.value)
             setBoards("jake")
-            renderGameBoard();
+            renderShipsOnBoard();
+            setCompShip(0);
         })   
     }
 
     function init(){
+        
         listeners()
     }
 

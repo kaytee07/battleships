@@ -11,16 +11,9 @@
     const toggleAxis = () => {
         isYaxis ? false : true
     }
-    const shipGridSpot = (type,shipLength,y , x, axis) => {      
+    const shipGridSpot = (type ,y , x) => {      
         let curr = []
-        for(let i = 0; i < shipLength ; i++){
-            if(axis === true){
-                allspot.push({name:type,y_axis:y + i,x_axis:x })
-             } 
-            if(axis === false){  
-                allspot.push({name:type,y_axis:y, x_axis:x + i})
-            }
-        }
+        allspot.push({name:type,y_axis:y,x_axis:x })
         return curr
     }
     
