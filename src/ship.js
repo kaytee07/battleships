@@ -1,19 +1,38 @@
-const ships = (name, length) => {
+const ships = (id, length) => {
+    let shipLength = length;
+    let name = id;
+    let numOfHit = 0;
     let isSunken = false;
+    let shipHitPos = []
+
+
     const hitPoint = (point) => {
+        for(let hit of shipHitPos){
+            if(hit.x_axis === point.x_axis && hit.y_axis === point.y_axis){
+                return false
+            }
+            numOfHit++
+            return point
+        }
+        shipHitPos.push(point)
         return point
     }
+
     const isSunk = () => {
         if(length > 0) length --
-        if(length === 0) isSunken = true
-        return {length, isSunken}
+        if(length === numOfHit){
+            isSunken = true
+        }
+        return isSunken
     }
+
     return{
         name, 
-        length,
+        shipLength,
         isSunk,
         hitPoint
 }
 }
 
-module.exports = ships
+export default ships
+

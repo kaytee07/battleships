@@ -1,7 +1,7 @@
 let ships = require('../src/ship');
 
 test("if ship sunk", () => {
-    expect(ships("cruiser", 1).isSunk()).toEqual({"isSunken": true, "length": 0})
+    expect(ships("cruiser", 1).isSunk()).toEqual(true)
 })
 
 test("hitpoint", () => {
@@ -9,5 +9,5 @@ test("hitpoint", () => {
 })
 
 test("hitpoint", () => {
-    expect(ships("cruiser", 3).length).toBe(3)
+    expect(ships("cruiser", 3).shipLength).toBe(3)
 })

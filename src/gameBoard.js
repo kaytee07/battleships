@@ -1,38 +1,71 @@
- const ship = require('../src/ship')
- const gameBoards = () => {
+ import ship from "./ship.js"
+ const gameBoards = (name) => {
+    let whoseBoard = name
+    let ships = [];
+    let allspot = [];
     let isYaxis = true;
+    let hitAttack = [];
+    let missedAttack = []
+    let sunk = 17;
 
     const toggleAxis = () => {
         isYaxis ? false : true
     }
-    const gridSpot = (shipLength, x , y) => {
-        let allspot = []
+    const shipGridSpot = (type,shipLength,y , x, axis) => {      
+        let curr = []
         for(let i = 0; i < shipLength ; i++){
-            if(isYaxis){
-                allspot.push({x_axis:x,y_axis:y + i})
-             }
-            
-            if(!isYaxis){  
-                allspot.push({x_axis:x + i, y_axis:y})
+            if(axis === true){
+                allspot.push({name:type,y_axis:y + i,x_axis:x })
+             } 
+            if(axis === false){  
+                allspot.push({name:type,y_axis:y, x_axis:x + i})
             }
         }
-        return allspot
+        return curr
     }
     
-    const positionShip = (length, x_axis, y_axis) => {
-        let spot = gridSpot(length, x_axis, y_axis)
-        return spot
+    function isOver(){
+        if(sunk === 0){
+            return true
+        }
     }
 
+    const receiveAttack = (y_axis, x_axis, opps) => {  
+          missedAttack.forEach(point => {
+            if (point.toString() === `${y_axis},${x_axis}`){
+                return "already attacked"
+            }
+          })
+          hitAttack.forEach(point => {
+            if (point.toString() === `${y_axis},${x_axis}`){
+                return "already attacked"
+            }
+          })
 
-    const receiveAttack = (x_axis, y_axis) => {
+          allspot.forEach(coords => {
+            if(coords.y_axis === y_axis && coords.x_axis === x_axis){
+                sunk --
+                hitAttack.push({y_axis,x_axis});
+            }else{    
+               missedAttack.push({y_axis,x_axis})
+            }
+        })
 
+      
     }
+
+  
 
     return {
         toggleAxis,
-        positionShip,
+        shipGridSpot,
+        allspot,
+        receiveAttack,
+        ships,
+        whoseBoard,
+        isOver,
+        isYaxis
     }
 }
 
-module.exports = gameBoards;
+export default gameBoards

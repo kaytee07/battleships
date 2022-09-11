@@ -1,0 +1,21 @@
+.box{
+    height: 10px;
+    width:  10px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.grid-box{
+    display: grid;
+    grid-template-columns: repeat(10, 5px);
+    grid-gap: 20px;
+  
+}
+
+.addYellow {
+    border-color: yellow;
+}
+
+.addRed {
+    border-color: red;
+}
