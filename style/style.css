@@ -19,3 +19,20 @@
 .addRed {
     border-color: red;
 }
+
+.games{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.title{
+    display: flex;
+    justify-content: center;
+}
+
+div.start_game{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
