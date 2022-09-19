@@ -1,19 +1,21 @@
  import ship from "./ship.js"
- const gameBoards = (name) => {
-    let whoseBoard = name
-    let ships = [];
+ const gameBoards = () => {
     let allspot = [];
     let isYaxis = true;
     let hitAttack = [];
-    let missedAttack = []
+    let missedAttack = [];
+    let hitShip ;
     let sunk = 17;
 
     const toggleAxis = () => {
         isYaxis ? false : true
     }
-    const shipGridSpot = (type ,y , x) => {      
+    const shipGridSpot = (name, y , x) => {      
         let curr = []
-        allspot.push({name:type,y_axis:y,x_axis:x })
+        allspot.push({
+            name,
+            point:`${y},${x}`
+        })
         return curr
     }
     
@@ -23,24 +25,26 @@
         }
     }
 
-    const receiveAttack = (y_axis, x_axis, opps) => {  
-          missedAttack.forEach(point => {
-            if (point.toString() === `${y_axis},${x_axis}`){
-                return "already attacked"
-            }
-          })
-          hitAttack.forEach(point => {
-            if (point.toString() === `${y_axis},${x_axis}`){
-                return "already attacked"
-            }
-          })
+    const receiveAttack = (point) => {  
+        let miss = ""
+        if(missedAttack.indexOf(point) !== -1) return;
+        if(hitAttack.indexOf(point) !== -1) return;
 
-          allspot.forEach(coords => {
-            if(coords.y_axis === y_axis && coords.x_axis === x_axis){
-                sunk --
-                hitAttack.push({y_axis,x_axis});
-            }else{    
-               missedAttack.push({y_axis,x_axis})
+        const itAmiss = (elem) => point !== elem.point
+        if(allspot.every(itAmiss)){
+            missedAttack.push(point)
+        }
+        allspot.some((elem, index) => {
+            if(point === elem.point){
+                hitAttack.push({
+                    name: elem.name,
+                    point
+                })
+               
+                hitShip = {
+                    name: elem.name,
+                    point
+                }
             }
         })
 
@@ -54,10 +58,11 @@
         shipGridSpot,
         allspot,
         receiveAttack,
-        ships,
-        whoseBoard,
         isOver,
-        isYaxis
+        isYaxis,
+        missedAttack,
+        hitAttack,
+        hitShip
     }
 }
 

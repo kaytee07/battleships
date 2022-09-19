@@ -26,110 +26,7 @@ const DOM = (() => {
             return dontAdd
     }
 
-    function setShipListener(g){
-        let box = document.querySelectorAll(".box");
-        let button = document.querySelector(".btn");
-        console.log(newGame.gameBoard1.isYaxis)
-        button.addEventListener("click", ()=> { 
-            if(newGame.gameBoard1.isYaxis){     
-                console.log("me")
-                newGame.gameBoard1.isYaxis = false
-                button.innerHTML = 'vertical'
-               return
-                
-            }
-            if(newGame.gameBoard1.isYaxis === false){
-                console.log("ma")
-                newGame.gameBoard1.isYaxis = true
-                button.innerHTML = 'horizontal';
-                return
-            }
-          
-        })
-
-        // on mouse hover add highlight on area for ship
-        box.forEach(elem => {
-            elem.addEventListener("mouseover", () => {
-                let shipNo = newGame.player1.currShip
-                let currShipLen = newGame.player1.playerShips[shipNo].shipLength
-                let yAxis = parseInt(elem.getAttribute("point")[0], 10);
-                let xAxis = parseInt(elem.getAttribute("point")[2], 10);
-                let all = []
-                if(newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))
-                    }   
-                }
-                if(!newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){           
-                        all.push(throughBoard(`${yAxis},${xAxis + i}`))
-                    }  
-                } 
-                
-                console.log(all.indexOf(undefined))
-            })
-        })
-        // on mouse leave remove highlight on area for ship
-        box.forEach(elem => {
-            elem.addEventListener("mouseleave", () => {
-                let shipNo = newGame.player1.currShip
-                let currShipLen = newGame.player1.playerShips[shipNo].shipLength
-                let yAxis = parseInt(elem.getAttribute("point")[0], 10);
-                let xAxis = parseInt(elem.getAttribute("point")[2], 10);
-                let all = []
-                if(newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))        
-                    }  
-                }
-                if(!newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))                      
-                    }        
-                }    
-
-            })
-        })
-        // on mouse click add highlight on area for ship
-        box.forEach(elem => {
-            elem.addEventListener("click", () => {
-                let player = newGame.player1
-                let shipNo = newGame.player1.currShip
-                let yAxis = parseInt(elem.getAttribute("point")[0], 10);
-                let xAxis = parseInt(elem.getAttribute("point")[2], 10);
-                let all = [];
-            
-                let currShipLen = newGame.player1.playerShips[shipNo].shipLength
-                if(newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis+i},${xAxis}`))
-                    }                   
-                }
-                if(!newGame.gameBoard1.isYaxis){
-                    for(let i = 0 ; i < currShipLen ; i++){    
-                        all.push(throughBoard(`${yAxis},${xAxis + i}`))                            
-                    }           
-                }
-                console.log(all)
-                if(all.indexOf(undefined) !== -1 ) return;
-                if(isSpaceOccupied(all)) return
-                all.forEach(elem => {   
-                    console.log(elem.getAttribute("point"))
-                  newGame.gameBoard1.shipGridSpot(player.name,elem.getAttribute("point")[0], elem.getAttribute("point")[2])   
-                    elem.style.borderColor = "red"
-                })
-                newGame.player1.currShip++;    
-                    console.log(newGame.gameBoard1)
-                    console.log(newGame.gameBoard1.allspot)
-                    if(shipNo >= player.playerShips.length - 1){
-                        renderGamePlay1();
-                        renderGamePlay2();
-                        return
-                    }
-            })
-        })
-    } 
-
+ 
     // create players and board
     function setBoards(){
         newGame.gameBoard1 = gameBoards();
@@ -158,7 +55,6 @@ const DOM = (() => {
                 elem.style.backgroundColor = "green"
             }
         })
-      
     }   
 
     function getPLaceshipsP2(input){
@@ -180,9 +76,10 @@ const DOM = (() => {
         let grid = document.querySelector(".grid-box")
         grid.classList.add('first');
         newGame.gameBoard1.allspot.forEach(elem => {
-            getPLaceshipsP1(`${elem.y_axis},${elem.x_axis}`)
+            getPLaceshipsP1(`${elem.point}`)
           
          })
+        
     }
 
     function renderGamePlay2(){
@@ -191,10 +88,12 @@ const DOM = (() => {
         games.lastElementChild.classList.add("second")
         let box = document.querySelectorAll("div.second > .box")
         newGame.gameBoard2.allspot.forEach(elem => {
-            getPLaceshipsP2(`${elem.y_axis},${elem.x_axis}`)
+            getPLaceshipsP2(`${elem.point}`)
           
          })
+         board1Listener();
     }
+
 
    
     function renderBoard(){
@@ -225,15 +124,15 @@ const DOM = (() => {
     let change = Math.floor(Math.random() * (10 - currShip.shipLength)) 
     for(let i = 0; i < currShip.shipLength; i++){
         if(isYaxis){
-            newGame.gameBoard2.shipGridSpot(player.name,change + i, staticLIst) 
+            newGame.gameBoard2.shipGridSpot(currShip.name,change + i, staticLIst) 
         }
         if(!isYaxis){
-            newGame.gameBoard2.shipGridSpot(player.name,staticLIst,change + i) 
+            newGame.gameBoard2.shipGridSpot(currShip.name,staticLIst,change + i) 
         }
      }
      num++
      setCompShip(num)
-     console.log(newGame)
+    
       
     }
     
@@ -258,6 +157,113 @@ const DOM = (() => {
  
 
 //listeners
+function setShipListener(g){
+    let box = document.querySelectorAll(".box");
+    let button = document.querySelector(".btn");
+    button.addEventListener("click", ()=> { 
+        if(newGame.gameBoard1.isYaxis){     
+            newGame.gameBoard1.isYaxis = false
+            button.innerHTML = 'vertical'
+           return
+            
+        }
+        if(newGame.gameBoard1.isYaxis === false){
+            newGame.gameBoard1.isYaxis = true
+            button.innerHTML = 'horizontal';
+            return
+        }
+      
+    })
+
+    // on mouse hover add highlight on area for ship
+    box.forEach(elem => {
+        elem.addEventListener("mouseover", () => {
+            let shipNo = newGame.player1.currShip
+            let currShipLen = newGame.player1.playerShips[shipNo].shipLength
+            let yAxis = parseInt(elem.getAttribute("point")[0], 10);
+            let xAxis = parseInt(elem.getAttribute("point")[2], 10);
+            let all = []
+            if(newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){    
+                    all.push(throughBoard(`${yAxis+i},${xAxis}`))
+                }   
+            }
+            if(!newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){           
+                    all.push(throughBoard(`${yAxis},${xAxis + i}`))
+                }  
+            } 
+            
+        })
+    })
+    // on mouse leave remove highlight on area for ship
+    box.forEach(elem => {
+        elem.addEventListener("mouseleave", () => {
+            let shipNo = newGame.player1.currShip
+            let currShipLen = newGame.player1.playerShips[shipNo].shipLength
+            let yAxis = parseInt(elem.getAttribute("point")[0], 10);
+            let xAxis = parseInt(elem.getAttribute("point")[2], 10);
+            let all = []
+            if(newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){    
+                    all.push(throughBoard(`${yAxis+i},${xAxis}`))        
+                }  
+            }
+            if(!newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){    
+                    all.push(throughBoard(`${yAxis+i},${xAxis}`))                      
+                }        
+            }    
+
+        })
+    })
+    // on mouse click add highlight on area for ship
+    box.forEach(elem => {
+        elem.addEventListener("click", () => {
+            let player = newGame.player1
+            let shipNo = newGame.player1.currShip
+            let yAxis = parseInt(elem.getAttribute("point")[0], 10);
+            let xAxis = parseInt(elem.getAttribute("point")[2], 10);
+            let all = [];
+            let currType = newGame.player1.playerShips[shipNo].name
+            let currShipLen = newGame.player1.playerShips[shipNo].shipLength
+            if(newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){    
+                    all.push(throughBoard(`${yAxis+i},${xAxis}`))
+                }                   
+            }
+            if(!newGame.gameBoard1.isYaxis){
+                for(let i = 0 ; i < currShipLen ; i++){    
+                    all.push(throughBoard(`${yAxis},${xAxis + i}`))                            
+                }           
+            }
+            if(all.indexOf(undefined) !== -1 ) return;
+            if(isSpaceOccupied(all)) return
+            all.forEach(elem => {   
+              newGame.gameBoard1.shipGridSpot(currType,elem.getAttribute("point")[0], elem.getAttribute("point")[2])   
+                elem.style.borderColor = "red"
+            })
+            newGame.player1.currShip++;    
+                if(shipNo >= player.playerShips.length - 1){
+                    renderGamePlay1();
+                    renderGamePlay2();
+                    return
+                }
+        })
+    })
+} 
+
+    function board1Listener(){
+        let tab = document.querySelectorAll(".second > .box");
+        tab.forEach(elem => {
+            elem.addEventListener("click", () => {
+                newGame.gameBoard2.receiveAttack(elem.getAttribute("point"))
+                console.log(newGame.gameBoard2.hitAttack)
+                console.log(newGame.gameBoard2.missedAttack)
+            })
+        })
+    }
+
     function listeners(){
         let btnStrt = document.querySelector(".btn_start")
         let playerName = document.querySelector(".player_name");
@@ -267,13 +273,9 @@ const DOM = (() => {
             setBoards("jake")
             renderShipsOnBoard();
             setCompShip(0);
-            console.log(newGame.gameBoard2)
         })   
     }
 
-    function playGame(){
-        
-    }
 
     function init(){
         

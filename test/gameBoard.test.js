@@ -59,9 +59,15 @@ test("attacks hit", () => {
     expect(gameBoard.receiveAttack(2, 10)).toBe(true)
 })
 
-test.only("isYaxis", () => {
+test("isYaxis", () => {
     let gameBoard = gameBoards();
     gameBoard.isYaxis = false
     console.log(gameBoard.isYaxis)
     expect(gameBoard.isYaxis).toBe(true)
+})
+
+test.only("test for receive Attack", ()=> {
+    let gameBoard = gameBoards();
+    gameBoard.receiveAttack(7,8);
+    expect(gameBoard.missedAttack).toBe(['7,8'])
 })
