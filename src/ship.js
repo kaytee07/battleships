@@ -1,29 +1,28 @@
 const ships = (id, length) => {
     let shipLength = length;
     let name = id;
-    let numOfHit = 0;
-    let isSunken = false;
+   
     let shipHitPos = []
 
 
     const hitPoint = (point) => {
-        if(length > 0) length --
-        return point
+        length > 0 ? length -- : "";
+        shipHitPos.push(point)
     }
 
     const isSunk = () => { 
-        if(length === 0){
-            isSunken = true
-        }
-        return isSunken = true;
+        let isSunken = false;
+        if(length === shipHitPos.length) isSunken = true;
+        return isSunken
     }
 
     return{
         name, 
         shipLength,
         isSunk,
-        hitPoint
-}
+        hitPoint,
+        shipHitPos
+    }
 }
 
 export default ships

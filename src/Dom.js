@@ -57,15 +57,15 @@ const DOM = (() => {
         })
     }   
 
-    function getPLaceshipsP2(input){
-        let box = document.querySelectorAll("div.second > .box")
-        box.forEach(elem => {
-            if(elem.getAttribute("point") === input){
-                elem.style.backgroundColor = "green"
-            }
-        })
+    // function getPLaceshipsP2(input){
+    //     let box = document.querySelectorAll("div.second > .box")
+    //     box.forEach(elem => {
+    //         if(elem.getAttribute("point") === input){
+    //             elem.style.backgroundColor = "green"
+    //         }
+    //     })
       
-    }   
+    // }   
 
     function renderGamePlay1(){
         let games = document.querySelector(".games");
@@ -87,10 +87,10 @@ const DOM = (() => {
         renderBoard();
         games.lastElementChild.classList.add("second")
         let box = document.querySelectorAll("div.second > .box")
-        newGame.gameBoard2.allspot.forEach(elem => {
-            getPLaceshipsP2(`${elem.point}`)
+        // newGame.gameBoard2.allspot.forEach(elem => {
+        //     getPLaceshipsP2(`${elem.point}`)
           
-         })
+        //  })
          board1Listener();
     }
 
@@ -257,11 +257,64 @@ function setShipListener(g){
         let tab = document.querySelectorAll(".second > .box");
         tab.forEach(elem => {
             elem.addEventListener("click", () => {
-                newGame.gameBoard2.receiveAttack(elem.getAttribute("point"))
-                console.log(newGame.gameBoard2.hitAttack)
-                console.log(newGame.gameBoard2.missedAttack)
+                let hit = newGame.gameBoard2.receiveAttack(elem.getAttribute("point"))
+                newGame.player2.playerShips.forEach(elem => {
+                    if(elem.name === hit.name){
+                        elem.hitPoint(hit.point)
+                        elem.shipHitPos.forEach(elem => {
+                            hitSpot1(elem).style.backgroundColor = 'red'
+                        })
+                    }
+                })
+               newGame.gameBoard2.missedAttack.forEach(elem => {
+                missSpot1(elem).style.backgroundColor = 'yellow'
+               })
+               isGameOver4P2()
+               playP2()
             })
+
+          
         })
+    } 
+
+    //function needed
+    function hitSpot1(pain){
+        let box = document.querySelectorAll(".second > .box ");
+        for(let j = 0; j < box.length ; j++){
+            if(pain === box[j].getAttribute("point")) return box[j]
+        }
+    }
+
+    function missSpot1(pain){
+        let box = document.querySelectorAll(".second > .box ");
+        for(let j = 0; j < box.length ; j++){
+            if(pain === box[j].getAttribute("point")) return box[j]
+        }
+    }
+    
+
+    function isGameOver4P2(){
+        console.log(newGame.gameBoard2.isOver())
+        if(newGame.gameBoard2.isOver()){
+            alert(`${newGame.player1.name} wins`)
+        }
+    }
+
+    
+    //player two turn in playing 
+    function playP2(){
+        let box = document.querySelectorAll(".first > .box");
+        let select = box[Math.floor(Math.random() * box.length)];
+        let hit = newGame.gameBoard1.receiveAttack(select.getAttribute("point"));
+        newGame.player1.playerShips.forEach(elem => {
+            if(elem.name === hit.name){
+                elem.hitPoint(hit.point)
+                elem.shipHitPos.forEach(elem => {
+                    hitSpot1(elem).style.backgroundColor = 'red'
+                })
+            }
+        })
+        console.log(hit)
     }
 
     function listeners(){

@@ -4,7 +4,7 @@
     let isYaxis = true;
     let hitAttack = [];
     let missedAttack = [];
-    let hitShip ;
+    
     let sunk = 17;
 
     const toggleAxis = () => {
@@ -20,13 +20,15 @@
     }
     
     function isOver(){
-        if(sunk === 0){
-            return true
+        if(hitAttack.length < allspot.length){
+            return false
         }
+
+        return true
     }
 
     const receiveAttack = (point) => {  
-        let miss = ""
+        let hitShip = "";
         if(missedAttack.indexOf(point) !== -1) return;
         if(hitAttack.indexOf(point) !== -1) return;
 
@@ -36,11 +38,7 @@
         }
         allspot.some((elem, index) => {
             if(point === elem.point){
-                hitAttack.push({
-                    name: elem.name,
-                    point
-                })
-               
+                hitAttack.push(point)
                 hitShip = {
                     name: elem.name,
                     point
@@ -48,7 +46,7 @@
             }
         })
 
-      
+      return hitShip
     }
 
   
@@ -62,7 +60,6 @@
         isYaxis,
         missedAttack,
         hitAttack,
-        hitShip
     }
 }
 
