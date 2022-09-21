@@ -4,8 +4,6 @@
     let isYaxis = true;
     let hitAttack = [];
     let missedAttack = [];
-    
-    let sunk = 17;
 
     const toggleAxis = () => {
         isYaxis ? false : true

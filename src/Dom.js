@@ -10,7 +10,7 @@ const DOM = (() => {
         newGame.player2 = player(true);
        
     }
-//push ship to board
+//!push ship to board
     function throughBoard(highLIghted){
         let box = document.querySelectorAll(".box");
         for(let j = 0; j < box.length ; j++){
@@ -57,10 +57,12 @@ const DOM = (() => {
         })
     }   
 
+   //! remove comment to view comnputer ship positions
     // function getPLaceshipsP2(input){
     //     let box = document.querySelectorAll("div.second > .box")
     //     box.forEach(elem => {
     //         if(elem.getAttribute("point") === input){
+    //             console.log(elem)
     //             elem.style.backgroundColor = "green"
     //         }
     //     })
@@ -113,30 +115,34 @@ const DOM = (() => {
         games.append(space)
     }
 
-    function setCompShip(num) {
-    let statics = randNum(1,9)
-    if(num >= newGame.player2.playerShips.length) return
-    let staticLIst = statics[num];
-    let bool = [true, false];
-    let isYaxis = bool[Math.floor(Math.random() * 2)];
-    let player = newGame.player2;
-    let currShip = player.playerShips[num];
-    let change = Math.floor(Math.random() * (10 - currShip.shipLength)) 
-    for(let i = 0; i < currShip.shipLength; i++){
-        if(isYaxis){
-            newGame.gameBoard2.shipGridSpot(currShip.name,change + i, staticLIst) 
-        }
-        if(!isYaxis){
-            newGame.gameBoard2.shipGridSpot(currShip.name,staticLIst,change + i) 
-        }
-     }
-     num++
-     setCompShip(num)
-    
-      
+    function setCompShip() {
+    let random = randNum()
+    function recur(num){
+        if(num >= newGame.player2.playerShips.length) return
+        let staticLIst = random[num];
+        let bool = [true, false];
+        let isYaxis = bool[Math.floor(Math.random() * 1)];
+        let player = newGame.player2;
+        let currShip = player.playerShips[num];
+        let incrementNum = Math.floor(Math.random() * 10) 
+        let change = incrementNum + currShip.shipLength >= 9 ? incrementNum - currShip.shipLength : incrementNum;
+        for(let i = 0; i < currShip.shipLength; i++){
+            if(isYaxis){
+                newGame.gameBoard2.shipGridSpot(currShip.name,parseInt(change, 10) + i, staticLIst) 
+            }
+            if(!isYaxis){
+                newGame.gameBoard2.shipGridSpot(currShip.name,staticLIst,parseInt(change, 10) + i) 
+            }
+         }
+         num++
+         recur(num)
     }
-    
-    function randNum (){
+    recur(0);
+   
+}
+
+
+     function randNum (){
         let randNum = []
         let pull = [1,2,3,4,5,6,7,8,9];
         function checkNo(count, length){
@@ -155,8 +161,8 @@ const DOM = (() => {
       return randNum
     }
  
-
-//listeners
+  
+//!listeners
 function setShipListener(g){
     let box = document.querySelectorAll(".box");
     let button = document.querySelector(".btn");
@@ -175,7 +181,7 @@ function setShipListener(g){
       
     })
 
-    // on mouse hover add highlight on area for ship
+    //! on mouse hover add highlight on area for ship
     box.forEach(elem => {
         elem.addEventListener("mouseover", () => {
             let shipNo = newGame.player1.currShip
@@ -196,7 +202,7 @@ function setShipListener(g){
             
         })
     })
-    // on mouse leave remove highlight on area for ship
+    //! on mouse leave remove highlight on area for ship
     box.forEach(elem => {
         elem.addEventListener("mouseleave", () => {
             let shipNo = newGame.player1.currShip
@@ -217,7 +223,7 @@ function setShipListener(g){
 
         })
     })
-    // on mouse click add highlight on area for ship
+    //! on mouse click add highlight on area for ship
     box.forEach(elem => {
         elem.addEventListener("click", () => {
             let player = newGame.player1
@@ -262,14 +268,14 @@ function setShipListener(g){
                     if(elem.name === hit.name){
                         elem.hitPoint(hit.point)
                         elem.shipHitPos.forEach(elem => {
-                            hitSpot1(elem).style.backgroundColor = 'red'
+                            hitSpot(elem).style.backgroundColor = 'red'
                         })
                     }
                 })
                newGame.gameBoard2.missedAttack.forEach(elem => {
-                missSpot1(elem).style.backgroundColor = 'yellow'
+                missSpot(elem).style.backgroundColor = 'yellow'
                })
-               isGameOver4P2()
+               isGameOver(newGame.player1.name)
                playP2()
             })
 
@@ -277,44 +283,60 @@ function setShipListener(g){
         })
     } 
 
-    //function needed
-    function hitSpot1(pain){
+    //!function needed
+    function hitSpot(pain){
         let box = document.querySelectorAll(".second > .box ");
         for(let j = 0; j < box.length ; j++){
             if(pain === box[j].getAttribute("point")) return box[j]
         }
     }
 
-    function missSpot1(pain){
+    function newHitSpot(pain){
+        let box = document.querySelectorAll(".first > .box ");
+        for(let j = 0; j < box.length ; j++){
+            if(pain === box[j].getAttribute("point")) return box[j]
+        }
+    }
+
+    function missSpot(pain){
         let box = document.querySelectorAll(".second > .box ");
         for(let j = 0; j < box.length ; j++){
             if(pain === box[j].getAttribute("point")) return box[j]
         }
     }
-    
 
-    function isGameOver4P2(){
-        console.log(newGame.gameBoard2.isOver())
+    function newMissSpot(pain){
+        let box = document.querySelectorAll(".first > .box ");
+        for(let j = 0; j < box.length ; j++){
+            if(pain === box[j].getAttribute("point")) return box[j]
+        }
+    }
+
+    function isGameOver(player){
         if(newGame.gameBoard2.isOver()){
-            alert(`${newGame.player1.name} wins`)
+            alert(`${player} wins`)
         }
     }
 
     
-    //player two turn in playing 
+    //!player two turn in playing 
     function playP2(){
         let box = document.querySelectorAll(".first > .box");
         let select = box[Math.floor(Math.random() * box.length)];
         let hit = newGame.gameBoard1.receiveAttack(select.getAttribute("point"));
-        newGame.player1.playerShips.forEach(elem => {
-            if(elem.name === hit.name){
-                elem.hitPoint(hit.point)
-                elem.shipHitPos.forEach(elem => {
-                    hitSpot1(elem).style.backgroundColor = 'red'
+        newGame.player1.playerShips.forEach( find => {
+            if(find.name === hit.name){
+                find.hitPoint(hit.point)
+                find.shipHitPos.forEach(elem => {
+                    newHitSpot(elem).style.backgroundColor = 'red'
                 })
+                isGameOver(newGame.player2.name)
             }
         })
-        console.log(hit)
+
+        newGame.gameBoard1.missedAttack.forEach(elem => {
+            newMissSpot(elem).style.backgroundColor = 'yellow'
+           })
     }
 
     function listeners(){
