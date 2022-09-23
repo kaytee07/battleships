@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Kanit:wght@100;200;300&
+    family=Monoton&family=Rubik+Dirt&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
     <title>Battleship</title>
 </head>
 <body>
@@ -13,12 +18,20 @@
     </div>
 
     <div class="start_game">
-            <input class="player_name" type="text" placeholder="player name">
+            <label class="input1" for="input"> Enter Player Name</label>
+            <input id="input" class="player_name" type="text" placeholder="player name">
             <button class="btn_start">start game</button>
-    </div>
+    </div> 
     <div class="games">
 
     </div>
+   <div class="cover">
+</div>
+    <div class="endgame">
+        <h1 class="whowon"></h3>
+            <button class="start">start game</button>
+    </div>
+   
    
     <script type="module" src="./src/Dom.js"></script>
 </body>

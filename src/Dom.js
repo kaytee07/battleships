@@ -21,7 +21,7 @@ const DOM = (() => {
     function isSpaceOccupied(all){
         let dontAdd = false
         all.some(elem => {    
-            if(elem.style.borderColor === "red") dontAdd = true
+            if(elem.style.backgroundColor === "#a4c3b2") dontAdd = true
             })
             return dontAdd
     }
@@ -33,14 +33,19 @@ const DOM = (() => {
         newGame.gameBoard2 = gameBoards();    
     }
 
-    // render UIs
-
+    //! render UIs
+    //!render places ship UI
     function renderShipsOnBoard(){
         let strtGme = document.querySelector(".start_game");  
         let btn = document.createElement("button");
+        let header = document.createElement("h3");
+        strtGme.classList.add("reduceheight");
+        header.classList.add("placeship");
         btn.classList.add("btn");
+        header.innerHTML = "Place your ships"
         btn.innerHTML = newGame.gameBoard1.isYaxis ? "horizontal" : "vertical";
-        strtGme.innerHTML = ""      
+        strtGme.innerHTML = ""    ;
+        strtGme.append(header)  
         strtGme.append(btn)
          renderBoard()    
        setShipListener()
@@ -52,7 +57,7 @@ const DOM = (() => {
         let box = document.querySelectorAll("div.first > .box")
         box.forEach(elem => {
             if(elem.getAttribute("point") === input){
-                elem.style.backgroundColor = "green"
+                elem.style.backgroundColor = "gray"
             }
         })
     }   
@@ -62,7 +67,6 @@ const DOM = (() => {
     //     let box = document.querySelectorAll("div.second > .box")
     //     box.forEach(elem => {
     //         if(elem.getAttribute("point") === input){
-    //             console.log(elem)
     //             elem.style.backgroundColor = "green"
     //         }
     //     })
@@ -73,8 +77,11 @@ const DOM = (() => {
         let games = document.querySelector(".games");
         let start = document.querySelector(".start_game")
         start.innerHTML = "";
-        games.innerHTML = "";
+        games.innerHTML = ""
         renderBoard();
+        start.classList.remove("reduceheight")
+        start.classList.add("noheight")
+        start.style.height = "0px !important"
         let grid = document.querySelector(".grid-box")
         grid.classList.add('first');
         newGame.gameBoard1.allspot.forEach(elem => {
@@ -163,6 +170,14 @@ const DOM = (() => {
  
   
 //!listeners
+
+function endListener(){
+    let start = document.querySelector(".start");
+    start.addEventListener("click", () => {
+        location.reload()
+    })
+}
+
 function setShipListener(g){
     let box = document.querySelectorAll(".box");
     let button = document.querySelector(".btn");
@@ -200,6 +215,11 @@ function setShipListener(g){
                 }  
             } 
             
+            all.forEach(elem => {
+                if(elem) elem.classList.add("addgray")
+                return
+            })
+
         })
     })
     //! on mouse leave remove highlight on area for ship
@@ -217,9 +237,14 @@ function setShipListener(g){
             }
             if(!newGame.gameBoard1.isYaxis){
                 for(let i = 0 ; i < currShipLen ; i++){    
-                    all.push(throughBoard(`${yAxis+i},${xAxis}`))                      
+                    all.push(throughBoard(`${yAxis},${xAxis + i}`))                      
                 }        
             }    
+            
+            all.forEach(elem => {
+                if(elem) elem.classList.remove("addgray")
+                return
+            })
 
         })
     })
@@ -247,7 +272,7 @@ function setShipListener(g){
             if(isSpaceOccupied(all)) return
             all.forEach(elem => {   
               newGame.gameBoard1.shipGridSpot(currType,elem.getAttribute("point")[0], elem.getAttribute("point")[2])   
-                elem.style.borderColor = "red"
+                elem.style.background = "gray"
             })
             newGame.player1.currShip++;    
                 if(shipNo >= player.playerShips.length - 1){
@@ -265,18 +290,22 @@ function setShipListener(g){
             elem.addEventListener("click", () => {
                 let hit = newGame.gameBoard2.receiveAttack(elem.getAttribute("point"))
                 newGame.player2.playerShips.forEach(elem => {
+                    if(!hit.name) return
                     if(elem.name === hit.name){
                         elem.hitPoint(hit.point)
                         elem.shipHitPos.forEach(elem => {
-                            hitSpot(elem).style.backgroundColor = 'red'
+                            hitSpot(elem).style.backgroundColor = '#d62828'
                         })
                     }
                 })
                newGame.gameBoard2.missedAttack.forEach(elem => {
-                missSpot(elem).style.backgroundColor = 'yellow'
+                missSpot(elem).style.backgroundColor = '#f77f00'
                })
-               isGameOver(newGame.player1.name)
-               playP2()
+               isGameOver(newGame.player1.name, newGame.gameBoard2)
+               setTimeout(() => {
+                playP2()
+               }, 500);
+              
             })
 
           
@@ -312,31 +341,43 @@ function setShipListener(g){
         }
     }
 
-    function isGameOver(player){
-        if(newGame.gameBoard2.isOver()){
-            alert(`${player} wins`)
+    function isGameOver(player, gameboard){
+        const cover = document.querySelector(".cover");
+        const game = document.querySelector(".endgame");
+        const whoWOn = document.querySelector(".whowon");
+        if(gameboard.isOver()){
+            cover.style.display = "block";
+            game.style.display = "flex";
+            whoWOn.innerHTML = `${player} won!!`
         }
+        endListener()
     }
+
 
     
     //!player two turn in playing 
     function playP2(){
         let box = document.querySelectorAll(".first > .box");
         let select = box[Math.floor(Math.random() * box.length)];
+        let alrExstInMis = newGame.gameBoard1.missedAttack.indexOf(select.getAttribute("point"))
+        let alrExstInHit = newGame.gameBoard1.hitAttack.indexOf(select.getAttribute("point"))
+        if(alrExstInHit >= 0 || alrExstInMis >= 0) playP2();
         let hit = newGame.gameBoard1.receiveAttack(select.getAttribute("point"));
         newGame.player1.playerShips.forEach( find => {
             if(find.name === hit.name){
                 find.hitPoint(hit.point)
                 find.shipHitPos.forEach(elem => {
-                    newHitSpot(elem).style.backgroundColor = 'red'
+                    newHitSpot(elem).style.backgroundColor = '#d62828'
                 })
-                isGameOver(newGame.player2.name)
+            }else{
+                return
             }
         })
 
         newGame.gameBoard1.missedAttack.forEach(elem => {
-            newMissSpot(elem).style.backgroundColor = 'yellow'
+            newMissSpot(elem).style.backgroundColor = '#f77f00'
            })
+           isGameOver(newGame.player2.name, newGame.gameBoard1)
     }
 
     function listeners(){

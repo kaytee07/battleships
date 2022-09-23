@@ -1,24 +1,25 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
 .box{
-    height: 10px;
-    width:  10px;
+    height: 29px;
+    width: 32px;
     border: 1px solid black;
     cursor: pointer;
+    background-color: #00b4d8;
 }
 
 .grid-box{
     display: grid;
     grid-template-columns: repeat(10, 5px);
-    grid-gap: 20px;
-  
+    grid-row-gap: 1px;
+    grid-column-gap: 30px;
+    width: 350px;
 }
 
-.addYellow {
-    border-color: yellow;
-}
-
-.addRed {
-    border-color: red;
-}
 
 .games{
     display: flex;
@@ -29,10 +30,150 @@
 .title{
     display: flex;
     justify-content: center;
+    font-family: 'Uncial Antiqua', cursive;
+    font-size: 6.5vw;
+}
+
+.title > h2{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: #d62828;
+    
 }
 
 div.start_game{
     display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0px;
+    height: 200px;
+}
+
+.addgray{
+    background-color: #a4c3b2;
+}
+
+.btn_start{
+    height: 40px;
+    font-family: 'Uncial Antiqua', cursive;
+    width: 200px;
+    background-color: #023047;
+    color: white;
+    border: 1px solid #00b4d8;
+}
+
+.input1{
+    font-family: 'Uncial Antiqua', cursive;
+    border-radius: 2px;
+    color: white;
+}
+
+.player_name{
+    height: 40px;
+    font-family: 'Uncial Antiqua', cursive;
+    padding: 10px;
+    text-align: center;
+}
+
+.reduceheight{
+    height: 80px !important;
+}
+
+.placeship{
+    font-family: 'Uncial Antiqua', cursive;
+    color: white;
+}
+
+.noheight{
+    height: 0px !important;
+}
+
+button.btn{
+    height: 30px;
+    width: 136px;
+    font-family: 'Uncial Antiqua', cursive;
+    background-color: #023047;
+    color: white;
+    border: 1px solid #00b4d8;
+}
+
+body{
+    height: 100vh;
+    background-color: #023047;
+}
+
+.endgame{
+    width: 500px;
+    height: 270px;
+    display: flex;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left:0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 1;
+    display: none;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.start{
+    margin-top: 10px;
+    height: 40px;
+    width: 214px;
+    font-family: 'Uncial Antiqua', cursive;
+    background-color: #023047;
+    color: white;
+    border: 1px solid #00b4d8;
+}
+
+.whowon{
+    font-family: 'Uncial Antiqua', cursive;
+    color: white;
+}
+
+.cover{
+top: 0;
+left:0;
+ height: 100vh;
+ width: 100vw;
+ position: absolute;
+ background-color: rgba(0, 0, 0, 0.5);
+ display: none;
+}
+
+@media (max-width : 800px){ 
+    .grid-box{
+        margin-bottom: 30px;
+    }
+    .title > h2 {
+        margin-top: 20px;
+        margin-bottom: 50px;
+    }
+    div.start_game{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 20px;
+    height: 200px;
+    }
+    .title{
+        font-size: 8.5vw;
+    }
+
+    .endgame{
+        width: 70%;
+    }
+}
+
+@media (min-width : 1360px){
+    .title{
+        font-size: 6.5vw;
+    }
+
 }

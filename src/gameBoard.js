@@ -10,6 +10,7 @@
     }
     const shipGridSpot = (name, y , x) => {      
         let curr = []
+        allspot.forEach
         allspot.push({
             name,
             point:`${y},${x}`
