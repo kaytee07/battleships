@@ -8,7 +8,6 @@ const DOM = (() => {
     function setPlayers(input){
         newGame.player1 = player(false, input)
         newGame.player2 = player(true);
-       
     }
 //!push ship to board
     function throughBoard(highLIghted){
@@ -385,6 +384,9 @@ function setShipListener(g){
         let playerName = document.querySelector(".player_name");
 
         btnStrt.addEventListener("click", ()=> {
+            if(!playerName.value){  
+                return alert("enter player name");
+            }
             setPlayers(playerName.value)
             setBoards("jake")
             renderShipsOnBoard();
