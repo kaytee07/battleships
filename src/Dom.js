@@ -257,7 +257,7 @@ function setShipListener(g){
             let xAxis = parseInt(elem.getAttribute("point")[2], 10);
             let all = [];
             let currType = newGame.player1.playerShips[shipNo].name
-            let currShipLen = newGame.player1.playerShips[shipNo].shipLength
+            const currShipLen = newGame.player1.playerShips[shipNo].shipLength
             if(newGame.gameBoard1.isYaxis){
                 for(let i = 0 ; i < currShipLen ; i++){    
                     all.push(throughBoard(`${yAxis+i},${xAxis}`))

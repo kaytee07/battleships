@@ -1,5 +1,3 @@
-import gameBoards from "./gameBoard.js";
-
 const gamePlay = () => {
 let isGameWon = false;
 
