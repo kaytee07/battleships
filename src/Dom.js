@@ -20,7 +20,7 @@ const DOM = (() => {
     function isSpaceOccupied(all){
         let dontAdd = false
         all.some(elem => {    
-            if(elem.style.backgroundColor === "#a4c3b2") dontAdd = true
+            if(elem.style.backgroundColor === "gray") dontAdd = true
             })
             return dontAdd
     }
